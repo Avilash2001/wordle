@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const WORD_LENGTH = 5;
 const MAX_ATTEMPTS = 6;
@@ -126,11 +127,19 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-bg text-text-white flex flex-col items-center justify-center p-4 select-none touch-manipulation gap-8">
-      <h1 className="text-4xl font-bold">Wordle Practicer</h1>
+      <p className="text-2xl md:text-4xl font-bold">
+        Wordle by <Link href={'https://github.com/Avilash2001'}>Avilash</Link>
+      </p>
 
-      <h3 className="text-lg font-semibold">
-        Made this so I can play as much as I want — no paywalls, no limits
-      </h3>
+      <div className="flex flex-col gap-2">
+        <p className="md:text-lg font-semibold text-center">
+          Made this so I can play as much as I want. No paywalls! No limits!
+        </p>
+
+        <p className="text-xs md:text-base text-center">
+          <i>“Wordle should be a right, not a privilege.” — Me, probably</i>
+        </p>
+      </div>
 
       <div className="grid gap-1.5">
         {[...Array(MAX_ATTEMPTS)].map((_, rowIdx) => {
@@ -182,9 +191,9 @@ export default function Home() {
                 key={key}
                 onClick={() => handleVirtualKey(key)}
                 className={cn(
-                  'text-sm px-3 py-2 rounded font-bold uppercase transition-all duration-100 active:scale-95',
+                  'text-xs md:text-sm p-1 md:p-3 rounded font-semibold md:font-bold uppercase transition-all duration-100 active:scale-95',
                   key === 'ENTER' || key === 'BACK' ? 'w-16' : 'w-10',
-                  usedKeys[key] || 'bg-gray-700 text-white',
+                  usedKeys[key] || 'bg-bg-light-gray text-white',
                 )}
               >
                 {key === 'BACK' ? '⌫' : key}
