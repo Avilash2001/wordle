@@ -1,103 +1,101 @@
-import Image from "next/image";
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+
+const WORD_LENGTH = 5;
+const MAX_ATTEMPTS = 6;
+const VALID_WORDS = ['BLINK', 'TRUST', 'MOUNT', 'PLANE', 'SHORE', 'CRISP'];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [word, setWord] = useState('');
+  const [guesses, setGuesses] = useState<string[]>([]);
+  const [currentGuess, setCurrentGuess] = useState('');
+  const [gameOver, setGameOver] = useState(false);
+  const [status, setStatus] = useState<'playing' | 'won' | 'lost'>('playing');
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const randomWord =
+      VALID_WORDS[Math.floor(Math.random() * VALID_WORDS.length)];
+    setWord(randomWord);
+  }, []);
+
+  const handleGuess = () => {
+    if (currentGuess.length !== WORD_LENGTH) {
+      toast('Word must be 5 letters long');
+      return;
+    }
+
+    const newGuesses = [...guesses, currentGuess.toUpperCase()];
+    setGuesses(newGuesses);
+    setCurrentGuess('');
+
+    if (currentGuess.toUpperCase() === word) {
+      setStatus('won');
+      setGameOver(true);
+    } else if (newGuesses.length >= MAX_ATTEMPTS) {
+      setStatus('lost');
+      setGameOver(true);
+    }
+  };
+
+  const getBoxStyle = (char: string, index: number) => {
+    if (word[index] === char) return 'bg-green-500 text-white';
+    if (word.includes(char)) return 'bg-yellow-500 text-white';
+    return 'bg-gray-700 text-white';
+  };
+
+  return (
+    <main className="min-h-screen bg-bg text-white flex flex-col items-center justify-center gap-6">
+      <h1 className="text-4xl font-bold">Wordle Clone</h1>
+
+      <div className="grid gap-2">
+        {[...Array(MAX_ATTEMPTS)].map((_, rowIdx) => (
+          <div key={rowIdx} className="flex gap-1">
+            {[...Array(WORD_LENGTH)].map((_, colIdx) => {
+              const guessStr = guesses[rowIdx] || '';
+              const char = guessStr[colIdx] || '';
+              return (
+                <div
+                  key={colIdx}
+                  className={cn(
+                    'w-12 h-12 flex items-center justify-center border text-xl font-bold rounded-md',
+                    guessStr && getBoxStyle(char, colIdx),
+                  )}
+                >
+                  {char}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      {!gameOver && (
+        <div className="flex gap-2">
+          <Input
+            className="w-[200px] text-text-white"
+            maxLength={5}
+            value={currentGuess}
+            onChange={(e) => setCurrentGuess(e.target.value.toUpperCase())}
+            onKeyDown={(e) => e.key === 'Enter' && handleGuess()}
+          />
+          <Button className="cursor-pointer" onClick={handleGuess}>
+            Guess
+          </Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      )}
+
+      {gameOver && (
+        <div className="mt-4 text-xl">
+          {status === 'won'
+            ? '🎉 You guessed it!'
+            : `❌ Game over. The word was ${word}`}
+        </div>
+      )}
+    </main>
   );
 }
