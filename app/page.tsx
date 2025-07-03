@@ -125,8 +125,8 @@ export default function Home() {
   }, [currentGuess, gameOver]);
 
   return (
-    <main className="min-h-screen bg-bg text-text-white flex flex-col items-center justify-center p-4 select-none touch-manipulation">
-      <h1 className="text-4xl font-bold mb-8">Wordle Practicer</h1>
+    <main className="min-h-screen bg-bg text-text-white flex flex-col items-center justify-center p-4 select-none touch-manipulation gap-8">
+      <h1 className="text-4xl font-bold">Wordle Practicer</h1>
 
       <div className="grid gap-1.5">
         {[...Array(MAX_ATTEMPTS)].map((_, rowIdx) => {
@@ -154,11 +154,11 @@ export default function Home() {
       </div>
 
       {gameOver && (
-        <div className="mt-6 text-center">
+        <div className="text-center">
           <div className="text-xl mb-4">
             {status === 'won'
-              ? '🎉 You guessed it!'
-              : `❌ Game over. The word was ${word}`}
+              ? `You guessed it! The word was ${word}`
+              : `Sorry! Game over. The word was ${word}`}
           </div>
           <Button
             onClick={handleReset}
@@ -170,7 +170,7 @@ export default function Home() {
       )}
 
       {/* Onscreen Keyboard */}
-      <div className="mt-6 flex flex-col gap-1 max-w-[90vw]">
+      <div className="flex flex-col gap-1 max-w-[90vw]">
         {KEYS.map((row, rowIdx) => (
           <div key={rowIdx} className="flex justify-center gap-1">
             {row.map((key) => (
