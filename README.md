@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wordle Clone 🎯
 
-## Getting Started
+I made this simple Wordle clone because I got tired of paywalls and daily limits. I just wanted to play Wordle to my heart's content — anytime, as much as I want — without restrictions.
 
-First, run the development server:
+This project is built using:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* **Next.js (App Router)**
+* **TypeScript**
+* **Tailwind CSS** + **ShadCN** components
+* **Datamuse API** for dynamic 5-letter words
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Features:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* ✅ Real Wordle behavior (5-letter word, 6 attempts)
+* ✅ Onscreen keyboard + physical keyboard support
+* ✅ Color feedback like the original game
+* ✅ No account, no ads, no nags — just Wordle
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Why?
 
-## Learn More
+Because some fun things in life should stay simple, free, and infinite.
 
-To learn more about Next.js, take a look at the following resources:
+Feel free to fork, play, or improve it. No strings attached.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> “Wordle should be a right, not a privilege.” — Me, probably
