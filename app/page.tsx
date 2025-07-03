@@ -7,6 +7,11 @@ import { Button } from '@/components/ui/button';
 
 const WORD_LENGTH = 5;
 const MAX_ATTEMPTS = 6;
+const KEYS = [
+  ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+  ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK'],
+];
 
 export default function Home() {
   const [word, setWord] = useState('');
@@ -14,6 +19,7 @@ export default function Home() {
   const [currentGuess, setCurrentGuess] = useState('');
   const [gameOver, setGameOver] = useState(false);
   const [status, setStatus] = useState<'playing' | 'won' | 'lost'>('playing');
+  const [usedKeys, setUsedKeys] = useState<{ [key: string]: string }>({});
 
   const fetchWord = async () => {
     const res = await fetch('https://api.datamuse.com/words?sp=?????&max=1000');
@@ -49,6 +55,19 @@ export default function Home() {
     setGuesses(newGuesses);
     setCurrentGuess('');
 
+    const updatedKeys = { ...usedKeys };
+    currentGuess.split('').forEach((char, idx) => {
+      if (word[idx] === char) {
+        updatedKeys[char] = 'bg-bg-green';
+      } else if (word.includes(char)) {
+        if (updatedKeys[char] !== 'bg-bg-green')
+          updatedKeys[char] = 'bg-bg-yellow';
+      } else {
+        if (!updatedKeys[char]) updatedKeys[char] = 'bg-gray-700';
+      }
+    });
+    setUsedKeys(updatedKeys);
+
     if (currentGuess === word) {
       setStatus('won');
       setGameOver(true);
@@ -63,7 +82,19 @@ export default function Home() {
     setCurrentGuess('');
     setGameOver(false);
     setStatus('playing');
+    setUsedKeys({});
     fetchWord();
+  };
+
+  const handleVirtualKey = (key: string) => {
+    if (gameOver) return;
+    if (key === 'ENTER') {
+      handleGuess();
+    } else if (key === 'BACK') {
+      setCurrentGuess((prev) => prev.slice(0, -1));
+    } else if (/^[A-Z]$/.test(key) && currentGuess.length < WORD_LENGTH) {
+      setCurrentGuess((prev) => prev + key);
+    }
   };
 
   const getBoxStyle = (char: string, index: number) => {
@@ -94,8 +125,8 @@ export default function Home() {
   }, [currentGuess, gameOver]);
 
   return (
-    <main className="min-h-screen bg-bg text-text-white flex flex-col items-center justify-center p-4">
-      <h1 className="text-4xl font-bold mb-8">Wordle</h1>
+    <main className="min-h-screen bg-bg text-text-white flex flex-col items-center justify-center p-4 select-none touch-manipulation">
+      <h1 className="text-4xl font-bold mb-8">Wordle {word}</h1>
 
       <div className="grid gap-1.5">
         {[...Array(MAX_ATTEMPTS)].map((_, rowIdx) => {
@@ -137,6 +168,27 @@ export default function Home() {
           </Button>
         </div>
       )}
+
+      {/* Onscreen Keyboard */}
+      <div className="mt-6 flex flex-col gap-1 max-w-[90vw]">
+        {KEYS.map((row, rowIdx) => (
+          <div key={rowIdx} className="flex justify-center gap-1">
+            {row.map((key) => (
+              <button
+                key={key}
+                onClick={() => handleVirtualKey(key)}
+                className={cn(
+                  'text-sm px-3 py-2 rounded font-bold uppercase transition-all duration-100 active:scale-95',
+                  key === 'ENTER' || key === 'BACK' ? 'w-16' : 'w-10',
+                  usedKeys[key] || 'bg-gray-700 text-white',
+                )}
+              >
+                {key === 'BACK' ? '⌫' : key}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
