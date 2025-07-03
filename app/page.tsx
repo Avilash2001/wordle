@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 const WORD_LENGTH = 5;
 const MAX_ATTEMPTS = 6;
-const VALID_WORDS = ['BLINK', 'TRUST', 'MOUNT', 'PLANE', 'SHORE', 'CRISP'];
 
 export default function Home() {
   const [word, setWord] = useState('');
@@ -15,10 +15,66 @@ export default function Home() {
   const [gameOver, setGameOver] = useState(false);
   const [status, setStatus] = useState<'playing' | 'won' | 'lost'>('playing');
 
-  useEffect(() => {
-    const randomWord =
-      VALID_WORDS[Math.floor(Math.random() * VALID_WORDS.length)];
+  const fetchWord = async () => {
+    const res = await fetch('https://api.datamuse.com/words?sp=?????&max=1000');
+    const data = await res.json();
+    const words = data
+      .map((w: { word: string }) => w.word.toUpperCase())
+      .filter((w: string) => /^[A-Z]{5}$/.test(w));
+    const randomWord = words[Math.floor(Math.random() * words.length)];
     setWord(randomWord);
+  };
+
+  const validateWord = async (guess: string): Promise<boolean> => {
+    const res = await fetch(
+      `https://api.datamuse.com/words?sp=${guess.toLowerCase()}&max=1`,
+    );
+    const data = await res.json();
+    return data.length > 0 && data[0].word.toUpperCase() === guess;
+  };
+
+  const handleGuess = async () => {
+    if (currentGuess.length !== WORD_LENGTH) {
+      toast('Word must be 5 letters long');
+      return;
+    }
+
+    const isValid = await validateWord(currentGuess);
+    if (!isValid) {
+      toast('Not a valid word');
+      return;
+    }
+
+    const newGuesses = [...guesses, currentGuess];
+    setGuesses(newGuesses);
+    setCurrentGuess('');
+
+    if (currentGuess === word) {
+      setStatus('won');
+      setGameOver(true);
+    } else if (newGuesses.length >= MAX_ATTEMPTS) {
+      setStatus('lost');
+      setGameOver(true);
+    }
+  };
+
+  const handleReset = () => {
+    setGuesses([]);
+    setCurrentGuess('');
+    setGameOver(false);
+    setStatus('playing');
+    fetchWord();
+  };
+
+  const getBoxStyle = (char: string, index: number) => {
+    if (!char) return 'border-bg-gray bg-bg text-white';
+    if (word[index] === char) return 'bg-bg-green text-white border-none';
+    if (word.includes(char)) return 'bg-bg-yellow text-white border-none';
+    return 'bg-bg-gray text-white border-none';
+  };
+
+  useEffect(() => {
+    fetchWord();
   }, []);
 
   useEffect(() => {
@@ -36,32 +92,6 @@ export default function Home() {
     window.addEventListener('keydown', handleKeydown);
     return () => window.removeEventListener('keydown', handleKeydown);
   }, [currentGuess, gameOver]);
-
-  const handleGuess = () => {
-    if (currentGuess.length !== WORD_LENGTH) {
-      toast('Word must be 5 letters long');
-      return;
-    }
-
-    const newGuesses = [...guesses, currentGuess];
-    setGuesses(newGuesses);
-    setCurrentGuess('');
-
-    if (currentGuess === word) {
-      setStatus('won');
-      setGameOver(true);
-    } else if (newGuesses.length >= MAX_ATTEMPTS) {
-      setStatus('lost');
-      setGameOver(true);
-    }
-  };
-
-  const getBoxStyle = (char: string, index: number) => {
-    if (!char) return 'border-bg-gray bg-bg text-white';
-    if (word[index] === char) return 'bg-bg-green text-white border-none';
-    if (word.includes(char)) return 'bg-bg-yellow text-white border-none';
-    return 'bg-bg-gray text-white border-none';
-  };
 
   return (
     <main className="min-h-screen bg-bg text-text-white flex flex-col items-center justify-center p-4">
@@ -93,10 +123,18 @@ export default function Home() {
       </div>
 
       {gameOver && (
-        <div className="mt-6 text-xl">
-          {status === 'won'
-            ? '🎉 You guessed it!'
-            : `❌ Game over. The word was ${word}`}
+        <div className="mt-6 text-center">
+          <div className="text-xl mb-4">
+            {status === 'won'
+              ? '🎉 You guessed it!'
+              : `❌ Game over. The word was ${word}`}
+          </div>
+          <Button
+            onClick={handleReset}
+            className="mt-2 px-4 py-2 bg-white text-black rounded hover:bg-gray-200 cursor-pointer"
+          >
+            Play Again
+          </Button>
         </div>
       )}
     </main>
