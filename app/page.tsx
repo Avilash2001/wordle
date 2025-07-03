@@ -168,7 +168,7 @@ export default function Home() {
 
       {gameOver && (
         <div className="text-center">
-          <div className="text-xl mb-4">
+          <div className="text-sm md:text-xl mb-4">
             {status === 'won'
               ? `You guessed it! The word was ${word}`
               : `Sorry! Game over. The word was ${word}`}
@@ -183,15 +183,15 @@ export default function Home() {
       )}
 
       {/* Onscreen Keyboard */}
-      <div className="flex flex-col gap-1 max-w-[90vw]">
+      <div className="flex flex-col gap-2 md:gap-1 max-w-[90vw]">
         {KEYS.map((row, rowIdx) => (
-          <div key={rowIdx} className="flex justify-center gap-1">
+          <div key={rowIdx} className="flex justify-center gap-2 md:gap-1">
             {row.map((key) => (
               <button
                 key={key}
                 onClick={() => handleVirtualKey(key)}
                 className={cn(
-                  'text-xs md:text-sm p-1 md:p-3 rounded font-semibold md:font-bold uppercase transition-all duration-100 active:scale-95',
+                  'text-xs md:text-sm py-3 px-1 md:p-3 rounded font-semibold md:font-bold uppercase transition-all duration-100 active:scale-95',
                   key === 'ENTER' || key === 'BACK' ? 'w-16' : 'w-10',
                   usedKeys[key] || 'bg-bg-light-gray text-white',
                 )}
