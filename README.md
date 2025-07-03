@@ -1,4 +1,4 @@
-# Wordle Clone 🎯
+# Wordle Practicer 🎯
 
 I made this simple Wordle clone because I got tired of paywalls and daily limits. I just wanted to play Wordle to my heart's content — anytime, as much as I want — without restrictions.
 
