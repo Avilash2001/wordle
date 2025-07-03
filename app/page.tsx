@@ -64,7 +64,7 @@ export default function Home() {
         if (updatedKeys[char] !== 'bg-bg-green')
           updatedKeys[char] = 'bg-bg-yellow';
       } else {
-        if (!updatedKeys[char]) updatedKeys[char] = 'bg-gray-700';
+        if (!updatedKeys[char]) updatedKeys[char] = 'bg-bg-gray';
       }
     });
     setUsedKeys(updatedKeys);
