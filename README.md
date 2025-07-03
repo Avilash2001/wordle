@@ -9,7 +9,7 @@ This project is built using:
 * **Tailwind CSS** + **ShadCN** components
 * **Datamuse API** for dynamic 5-letter words
 
-### Features:
+## Features
 
 * ✅ Real Wordle behavior (5-letter word, 6 attempts)
 * ✅ Onscreen keyboard + physical keyboard support
