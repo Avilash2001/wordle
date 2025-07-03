@@ -126,7 +126,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-bg text-text-white flex flex-col items-center justify-center p-4 select-none touch-manipulation">
-      <h1 className="text-4xl font-bold mb-8">Wordle {word}</h1>
+      <h1 className="text-4xl font-bold mb-8">Wordle Practicer</h1>
 
       <div className="grid gap-1.5">
         {[...Array(MAX_ATTEMPTS)].map((_, rowIdx) => {
