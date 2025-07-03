@@ -5,6 +5,9 @@
 
 @theme inline {
   --color-bg: var(--bg);
+  --color-bg-gray: var(--bg-gray);
+  --color-bg-yellow: var(--bg-yellow);
+  --color-bg-green: var(--bg-green);
   --color-text-black: var(--text-black);
   --color-text-white: var(--text-white);
   --color-background: var(--background);
@@ -49,8 +52,11 @@
 :root {
   --radius: 0.625rem;
   --bg: #121212;
+  --bg-gray: #3a3a3c;
+  --bg-yellow: #b59f3b;
+  --bg-green: #538d4e;
   --text-black: #121212;
-  --text-white: #ffffff;
+  --text-white: #f8f8f8;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -86,8 +92,11 @@
 
 .dark {
   --bg: #121212;
+  --bg-gray: #3a3a3c;
+  --bg-yellow: #b59f3b;
+  --bg-green: #538d4e;
   --text-black: #121212;
-  --text-white: #ffffff;
+  --text-white: #f8f8f8;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
