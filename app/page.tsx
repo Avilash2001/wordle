@@ -128,6 +128,10 @@ export default function Home() {
     <main className="min-h-screen bg-bg text-text-white flex flex-col items-center justify-center p-4 select-none touch-manipulation gap-8">
       <h1 className="text-4xl font-bold">Wordle Practicer</h1>
 
+      <h3 className="text-lg font-semibold">
+        Made this so I can play as much as I want — no paywalls, no limits
+      </h3>
+
       <div className="grid gap-1.5">
         {[...Array(MAX_ATTEMPTS)].map((_, rowIdx) => {
           const guess =
